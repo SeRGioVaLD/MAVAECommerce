@@ -15,9 +15,9 @@ cliente = None
 app = Flask(__name__)
 cache = Cache(app, config={
     'CACHE_TYPE': 'memcached',
-    'CACHE_MEMCACHED_SERVERS': [os.environ.get('mc3.dev.ec2.memcachier.com:11211')],
-    'CACHE_MEMCACHED_USERNAME': os.environ.get('DAAEB5'),
-    'CACHE_MEMCACHED_PASSWORD': os.environ.get('6A45E258CDA9D31B1E32731AF7BB542A')
+    'CACHE_MEMCACHED_SERVERS': 'mc3.dev.ec2.memcachier.com:11211',
+    'CACHE_MEMCACHED_USERNAME': 'DAAEB5',
+    'CACHE_MEMCACHED_PASSWORD': '6A45E258CDA9D31B1E32731AF7BB542A'
 })   
 load_dotenv()
 
