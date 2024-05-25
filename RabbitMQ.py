@@ -5,7 +5,14 @@ REQUEST_QUEUE_NAME = "AdministracionDeInventario_request_queue"
 RESPONSE_QUEUE_NAME = "ProcesamientoDeOrdenes_response_queue"
 CONSUME_EXCHANGE_NAME = "CuentaXCobrar_exchange"
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
+credentials = pika.PlainCredentials('mavaecommerce', 'mavaecommerce')  # Reemplaza con tus credenciales
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+    '83.229.115.252',  # Tu dirección IP de RabbitMQ
+    credentials=credentials,
+    virtual_host='/'  # Host virtual (ajusta si es diferente)
+))
+
 channel1 = connection.channel()
 channel2 = connection.channel()
 channel1.queue_declare(queue=REQUEST_QUEUE_NAME)

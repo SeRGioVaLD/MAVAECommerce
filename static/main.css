@@ -42,7 +42,7 @@ header h1{
     font-size: 35px;
     /* background-color: #000; */
     color: #fff;
-    padding: 100px 0;
+    padding: 10px 0;
     font-weight: bold;
 }
 .eldiv{
@@ -54,7 +54,7 @@ header h1{
     position: relative ; /* Asegura que el h1 esté sobre el div creado */
     z-index: 3; /* Asegura que el h1 esté sobre el div creado */
     text-align: center; /* Alinea el texto en el centro */
-    padding-top: 10 px; /* Ajusta el espaciado según tu preferencia */
+     /* Ajusta el espaciado según tu preferencia */
     color: white; /* Color del texto */
 }
 .user-section {
@@ -63,8 +63,6 @@ header h1{
     text-align: center; /* Alinea el texto en el centro */
     padding-top: 5px; /* Ajusta el espaciado según tu preferencia */
     padding-right: 0px;
-
-
 }
 
 #loginBtn {
