@@ -8,14 +8,18 @@ from flask_caching import Cache
 from psycopg2 import connect, extras
 from dotenv import load_dotenv
 from RabbitMQ import recibirYProcesarMensajeADI, recibirYProcesarMensajeCxC, publish_message
+import json
 
 cliente = None
 
 app = Flask(__name__)
+cache = Cache(app, config={
+    'CACHE_TYPE': 'memcached',
+    'CACHE_MEMCACHED_SERVERS': [os.environ.get('MEMCACHIER_SERVERS')],
+    'CACHE_MEMCACHED_USERNAME': os.environ.get('MEMCACHIER_USERNAME'),
+    'CACHE_MEMCACHED_PASSWORD': os.environ.get('MEMCACHIER_PASSWORD')
+})   
 load_dotenv()
-
-cache = Cache(app, config={'CACHE_TYPE': 'redis',
-                          'CACHE_REDIS_URL': os.environ.get('REDIS_URL', 'redis://localhost:6379')})
 
 def get_connection():
     return connect(
@@ -27,6 +31,23 @@ def get_connection():
     )
 
 data_usuario = None
+
+
+@app.route('/api/borrar_archivo', methods=['POST'])
+def borrar_archivo():
+    try:
+        os.remove("/static/sesion.txt")
+        return jsonify({'success': True, 'message': 'Archivo borrado'})
+    except FileNotFoundError:
+        return jsonify({'success': False, 'message': 'Archivo no encontrado'})
+
+
+@app.get('/api/recarga_pagina')
+def verificar_sesion():
+    global data_usuario
+    return jsonify(data_usuario)
+    
+    
 
 @app.get('/api/verificar-sesion')
 def verificar_sesion():
@@ -334,7 +355,7 @@ def registro_cliente():
 
     return jsonify({'success': False, 'message': 'Error en las entradas'})
 
-
+    
 @app.post('/api/login')
 def login_cliente():
     global data_usuario
@@ -366,7 +387,7 @@ def login_cliente():
     return jsonify({'success': False, 'message': 'Credenciales incorrectas.'})
     
 @app.get('/')
-@cache.cached(timeout=3000) 
+@cache.cached(timeout=120)
 def home():
     return send_file('static/index.html')
 
