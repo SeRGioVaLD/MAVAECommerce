@@ -33,17 +33,19 @@ def get_connection():
 data_usuario = None
 
 @app.get('/api/verificar-sesion')
+@cache.cached(timeout=2000)
 def verificar_sesion():
     global data_usuario
     return jsonify(data_usuario)
     
 @app.post('/api/cerrar-sesion')
+@cache.cached(timeout=2000)
 def cerrar_sesion():
     global data_usuario
     data_usuario = None
 
 @app.get('/api/articulos')
-@cache.cached(timeout=50)
+@cache.cached(timeout=2000)
 def get_productos():
     
     conn = get_connection()
@@ -72,6 +74,7 @@ def get_productos():
 
 
 @app.post('/api/pagar')
+@cache.cached(timeout=2000)
 def pagar():
     data = request.json
     print(data[0])
@@ -134,6 +137,7 @@ def validar_telefono(telefono):
     return re.match(r"^[0-9]{9}$", str(telefono)) is not None
     
 @app.post('/api/registro')
+@cache.cached(timeout=2000)
 def registro_cliente():
     
     global data_usuario
@@ -341,6 +345,7 @@ def registro_cliente():
 
     
 @app.post('/api/login')
+@cache.cached(timeout=2000)
 def login_cliente():
     global data_usuario
     data = request.json
