@@ -16,11 +16,11 @@ load_dotenv()
 
 def get_connection():
     return connect(
-        user = os.environ["USER"],
-        password = os.environ["PASSWORD"],
-        dbname = os.environ["DATABASE"],
-        host = os.environ["HOST"],
-        port = os.environ["PORT"]
+        user = "admin",
+        password = "a1st6CKx38fiv6Xdouq7mAICohseSpwl",
+        dbname = "db_ecommerce_prby",
+        host = "dpg-cp77d1nsc6pc73a5fo8g-a.oregon-postgres.render.com",
+        port = "5432"
     )
 
 data_usuario = None
