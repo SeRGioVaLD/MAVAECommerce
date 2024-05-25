@@ -32,23 +32,6 @@ def get_connection():
 
 data_usuario = None
 
-
-@app.route('/api/borrar_archivo', methods=['POST'])
-def borrar_archivo():
-    try:
-        os.remove("/static/sesion.txt")
-        return jsonify({'success': True, 'message': 'Archivo borrado'})
-    except FileNotFoundError:
-        return jsonify({'success': False, 'message': 'Archivo no encontrado'})
-
-
-@app.get('/api/recarga_pagina')
-def verificar_sesion():
-    global data_usuario
-    return jsonify(data_usuario)
-    
-    
-
 @app.get('/api/verificar-sesion')
 def verificar_sesion():
     global data_usuario
@@ -60,6 +43,7 @@ def cerrar_sesion():
     data_usuario = None
 
 @app.get('/api/articulos')
+@cache.cached(timeout=50)
 def get_productos():
     
     conn = get_connection()
@@ -387,7 +371,6 @@ def login_cliente():
     return jsonify({'success': False, 'message': 'Credenciales incorrectas.'})
     
 @app.get('/')
-@cache.cached(timeout=120)
 def home():
     return send_file('static/index.html')
 
