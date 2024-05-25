@@ -4,15 +4,18 @@ import threading
 import re
 from datetime import datetime
 from flask import Flask, request, jsonify, send_file
+from flask_caching import Cache
 from psycopg2 import connect, extras
 from dotenv import load_dotenv
 from RabbitMQ import recibirYProcesarMensajeADI, recibirYProcesarMensajeCxC, publish_message
-
 
 cliente = None
 
 app = Flask(__name__)
 load_dotenv()
+
+cache = Cache(app, config={'CACHE_TYPE': 'redis',
+                          'CACHE_REDIS_URL': os.environ.get('REDIS_URL', 'redis://localhost:6379')})
 
 def get_connection():
     return connect(
@@ -363,6 +366,7 @@ def login_cliente():
     return jsonify({'success': False, 'message': 'Credenciales incorrectas.'})
     
 @app.get('/')
+@cache.cached(timeout=3000) 
 def home():
     return send_file('static/index.html')
 
