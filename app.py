@@ -3,7 +3,7 @@ import RabbitMQ
 import threading
 import re
 from datetime import datetime
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 from flask_caching import Cache
 from psycopg2 import connect, extras
 from dotenv import load_dotenv
@@ -43,6 +43,7 @@ def verificar_sesion():
 def cerrar_sesion():
     global data_usuario
     data_usuario = None
+
 
 @app.get('/api/articulos')
 #@cache.cached(timeout=2000)
@@ -374,7 +375,22 @@ def login_cliente():
         return jsonify({'success': True, 'message': 'Inicio de sesión exitoso.', 'data_usuario': data_usuario})
 
     return jsonify({'success': False, 'message': 'Credenciales incorrectas.'})
-    
+
+
+@app.get('/api/pedidos')
+def pedidos():
+    print("USURAIOOO ASDASD:"+data_usuario)
+    id_cliente = str(data_usuario['id_cliente'])
+
+    conn = get_connection()
+    cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+    cur.execute('SELECT id_factura, total FROM public."Factura" WHERE id_cliente = %s ORDER BY id_factura ASC', (id_cliente,))  # Consulta parametrizada
+    facturas = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template('/static/pedidos.html', facturas=facturas)
+
 @app.get('/')
 def home():
     return send_file('static/index.html')

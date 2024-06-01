@@ -4,6 +4,42 @@
     padding:0;
     font-family: 'Open Sans';
 }
+
+
+
+.overlay {
+    display: none;
+    position: fixed;  /* Cubrir toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    display: flex;    
+    align-items: center; 
+    justify-content: center; 
+    z-index: 1000;   /* Asegurar que esté por encima de todo */
+}
+
+.loader {
+    display: none;  /* Un ejemplo básico de animación de carga */
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -11,6 +47,7 @@ ul {
 }
 header {
     position: relative;
+    padding: 10px;
     height: 400px;
     overflow: hidden; /* Asegura que el efecto de filtro no se propague */
 }
@@ -46,6 +83,7 @@ header h1{
     font-weight: bold;
 }
 .eldiv{
+    padding-top: 100;
     text-align: center;
 }
 .imagenmava{
@@ -59,27 +97,6 @@ header h1{
 }
 .user-section {
     position: relative; /* Asegura que el h1 esté sobre el div creado */
-    z-index: 3; /* Asegura que el h1 esté sobre el div creado */
-    text-align: center; /* Alinea el texto en el centro */
-    padding-top: 5px; /* Ajusta el espaciado según tu preferencia */
-    padding-right: 0px;
-}
-
-#loginBtn {
-    margin-right: 10px;
-    padding: 5px;
-    font-size: 15px;
-    background-color: white;
-    color: black; 
-}
-
-#registerBtn {
-    margin-right: 10px;
-    margin-left: 10px;
-    padding: 5px;
-    font-size: 15px;
-    background-color: black;
-    color: white; 
 }
 
 #welcomeMsg {
@@ -105,14 +122,11 @@ header h1{
 
 .registro-form,
 .login-form {
-    
     margin: auto;
-    margin-top: 20px;
     padding: 20px;
     border: 1px solid #ccc;
-    display: none;
     flex-direction: column;
-    width: 300px;
+    width: 50%;
     align-self: center;
 }
 

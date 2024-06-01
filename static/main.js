@@ -3,6 +3,8 @@ let articulos = []
 let data_log = null;
 
 window.addEventListener('DOMContentLoaded', async () => {
+    
+    mostrarOverlay()
     const respuesta = await fetch('/api/articulos');
     const data = await respuesta.json()
 
@@ -12,8 +14,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     articulos = data
 
-
     renderArticulo(articulos)
+
+    ocultarOverlay()
 
     if (data_log != null) {
         quitarAccesos();
@@ -81,46 +84,60 @@ function cerrarSesion() {
     window.location.reload();
 }
 
+function mostrarOverlay() {
+    const overlay = document.getElementById("overlay");
+    const loader = document.getElementById("loader");
+    overlay.style.display = "flex";
+    loader.style.display = "block"; // Mostrar el loader dentro del overlay
+}
+
+function ocultarOverlay() {
+    const overlay = document.getElementById("overlay");
+    const loader = document.getElementById("loader");
+    overlay.style.display = "none";
+    loader.style.display = "none"; // Ocultar el loader junto con el overlay
+}
+
 function mostrarMensajeBienvenida(nombreUsuario) {
-    document.querySelector('.registro-form').style.display = 'none';
-    document.querySelector('.login-form').style.display = 'none';
+    const divContenedor = document.getElementById('sesion');
+    const boton1 = document.getElementById('cerrarSesion');
+
+    divContenedor.classList.remove('d-none');
+    boton1.classList.remove('d-none');
 
     const mensajeBienvenida = document.getElementById('mensajeBienvenida');
     mensajeBienvenida.innerText = `Bienvenido, ${nombreUsuario}!`;
-    document.querySelector('.bienvenida').style.display = 'block';
 }
+
+
+
 function quitarAccesos(){
-    document.querySelector('.user-section').style.display = 'none'; 
+    const divContenedor = document.getElementById('botonesSesion');
+    const boton1 = document.getElementById('loginBtn');
+    const boton2 = document.getElementById('registerBtn');
+
+    divContenedor.classList.add('d-none');
+    boton1.classList.add('d-none'); 
+    boton2.classList.add('d-none');
 }
 function darAccesos(){
-    document.querySelector('.user-section').style.display = 'block'; 
+    const divContenedor = document.getElementById('botonesSesion');
+    const boton1 = document.getElementById('loginBtn');
+    const boton2 = document.getElementById('registerBtn');
+
+    divContenedor.classList.remove('d-none');
+    boton1.classList.remove('d-none'); 
+    boton2.classList.remove('d-none');
 }
 
-function mostrarFormularioRegistro() {
-    var registroForm = document.querySelector('.registro-form');
-    var estiloRegistro = window.getComputedStyle(registroForm);
+function cerrarModal(nombre) {
+    var modal = document.querySelector(nombre);
+    var estiloModal = window.getComputedStyle(modal);
 
-    if (estiloRegistro.display === 'none'){
-        document.querySelector('.login-form').style.display = 'none';
-        registroForm.style.display = 'block';
-    } else {
-        document.querySelector('.login-form').style.display = 'none';
-        registroForm.style.display = 'none';
-    }
+    document.querySelector('.login-form').style.display = 'none';
+    registroForm.style.display = 'block';
 }
 
-function mostrarFormularioLogin() {
-    var registroForm = document.querySelector('.login-form');
-    var estiloRegistro = window.getComputedStyle(registroForm);
-
-    if (estiloRegistro.display === 'none'){
-        document.querySelector('.registro-form').style.display = 'none';
-        registroForm.style.display = 'block';
-    } else {
-        document.querySelector('.registro-form').style.display = 'none';
-        registroForm.style.display = 'none';
-    }
-}
 //------------------------------------------------------------------------------------------------
 function registrar() {
     // Datos de Usuario
@@ -184,6 +201,8 @@ function registrar() {
         return;
     }
 
+    mostrarOverlay()
+
     // Llamada a la Función Backend (asumiendo que existe)
     registrarBackend(
         usuario, 
@@ -204,6 +223,7 @@ function registrar() {
         pais,
         codigoPostal,
         function(response) {
+            ocultarOverlay()
             if (response && response.success){
                 data_log = response.data_usuario;
                 quitarAccesos();
@@ -211,7 +231,8 @@ function registrar() {
                 alert('Registro de usuario correto !');
             }
             else{
-                //mostrarFormularioRegistro() 
+                const miModal = new bootstrap.Modal(document.getElementById('registerModal'));
+                miModal.show(); 
                 alert(response.message);
             }
         }
@@ -240,18 +261,26 @@ function iniciarSesion(){
     const usuarioCorreo = document.getElementById('loginUsuarioCorreo').value;
     const contrasena = document.getElementById('loginContrasena').value;
 
+    mostrarOverlay()
+
     iniciarSesionBackend(usuarioCorreo, contrasena, function(response){
+        ocultarOverlay()
         if (response && response.success){
             data_log = response.data_usuario;
-            quitarAccesos();
+            quitarAccesos()
             mostrarMensajeBienvenida(data_log.nombres+" "+data_log.apellido_paterno+" "+data_log.apellido_materno);
             alert('Inicio de sesión correcta !');
+            
         }
         else{
-            //mostrarFormularioLogin() 
+            const miModal = new bootstrap.Modal(document.getElementById('logginModal'));
+            miModal.show();
             alert(response.message);
         }
     });
+
+ 
+
 }
 function iniciarSesionBackend(usuarioCorreo, contrasena, callback) {
     fetch('/api/login', {
@@ -335,7 +364,10 @@ function pagarClicked(){
 
         mensaje = itemsSeleccionados;
 
+        mostrarOverlay()
+
         enviarAlBackend(mensaje, function(response) {
+            ocultarOverlay()
             if (response && response.success) {
                 var resultadoFinal = response.resultado_final;
 
