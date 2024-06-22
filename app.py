@@ -24,9 +24,9 @@ load_dotenv()
 def get_connection():
     return connect(
         user = "admin",
-        password = "a1st6CKx38fiv6Xdouq7mAICohseSpwl",
-        dbname = "db_ecommerce_prby",
-        host = "dpg-cp77d1nsc6pc73a5fo8g-a.oregon-postgres.render.com",
+        password = "jSy4mEOMefAkjvNXKLczh4v7RIFKqmm8",
+        dbname = "dbmava",
+        host = "dpg-cpr839rqf0us738ab8fg-a.oregon-postgres.render.com",
         port = "5432"
     )
 
